@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>You are rickrolled!</title>
+    <style>
+        /* Thanks: https://lab.magiconch.com/homo/*/
+        html { background: #b3d0d0; color: #002b41; }
+        .center { text-align: center; }
+        .title{
+            display: block;
+            font-weight: 700;
+            font-size: 2em;
+            margin: 0.67em;
+            line-height: 45px;
+            text-align: center
+        }
+        body{
+            margin: 0;
+            text-align: center;
+            padding: 0px 0px 100px;
+        }
+        .mainNumber{
+            font-size:24px;
+            padding:40px 10px 100px;
+        }
+        button {
+            font-size: 1.5em
+        }
+    </style>
+</head>
+<body id="body">
+<div class="title">Roll a number!</div>
+<div id="mainNumber" class="mainNumber"></div>
+<!--
+<input id="rollMin" type="number" placeholder="Minimum">
+<input id="rollMax" type="number" placeholder="Maximum">
+-->
+<div class="center" id="wordLen"></div>
+<button onclick="roll()">Go!</button>
+
+<script src="https://cdn.jsdelivr.net/npm/js-base64@3.7.2/base64.min.js"></script>
+<!--<script src="Rickroll.js"></script>-->
+<script type="text/javascript">
+// imported base64.min.js
+
+const _squeries = function(str) {
+    var s = new URL(str).search;
+    if (/^\s*$/.test(s)) return {};
+    s = s.substring(1);
+    var o = {};
+    s.split('&').filter(function(v,i,a){return !/^\s*$/.test(v)}).forEach(function(v,i,a) {
+        if (v.indexOf('=') >= 0) {
+            var spl = v.split('=');
+            o[spl[0]] = spl[1];
+        } else {
+            o[v] = '';
+        }
+    });
+    return o;
+};
+
+const _readWordList = function(p /*string*/) {
+    var d /*string*/ = Base64.decode(p);
+    var l = [];
+    d.split(/[\r\n]+/).filter(function(v,i,a){return !/^\s*$/.test(v)}).forEach(function(v,i,a) {
+        if (!/^[a-z]+$/.test(v)) {
+            window.alert("invalid word #" + i + ": " + v + " should be alphabetic");
+        }
+        l.push(v.trim());
+    });
+    return l;
+};
+///////////////////////////
+
+const SLEEP = 50; // ms
+const TIMES = 20;
+
+const queries = _squeries(window.location.href);
+
+const _getQin = function(e) {
+    var n = Number(queries[e]);
+    if (n >= 0) return n;
+    return NaN;
+};
+
+const _getQi = function(e) {
+    var p = _getQin(e);
+    return isNaN(p) ? 0 : p;
+};
+
+const _randint = function(min,max) {
+    return Math.floor(Math.random() * (1 + max - min) + min);
+};
+
+function rollMin(){return _getQi('rollMin');}
+function rollMax(){return _getQi('rollMax');}
+
+function getNewNumber() {
+    return _randint(rollMin(), rollMax());
+}
+
+var _thr = false;
+if (!queries.words) _thr = true;
+if (!_thr){
+    var words = _readWordList(queries.words);
+    if (!words) thr = true;
+}
+if (_thr) {
+    document.getElementById('body').innerHTML =
+        '<div class="mainNumber">Not enough arguments!'
+    throw new Error('Not enough arguments!')
+}
+
+//var _sleep = function(timeout, task){window.setTimeout(task, timeout);};
+
+function rollOne(timesLeft, finalTask) {
+    /*if (timesLeft == 0) finalTask(true);
+    _sleep(SLEEP, function() {
+        finalTask(false);
+        rollOne(timesLeft - 1, finalTask);
+    })*/
+    var time0 = timesLeft;
+    var interval0 = setInterval(function() {
+        if (time0 == 0) {
+            finalTask(true);
+            clearInterval(interval0);
+        } else {
+            finalTask(false);
+            time0--;
+        }
+    }, SLEEP);
+}
+
+const _numeralId = function(i) {
+    if (i > 0 && i <= 20) return String.fromCodePoint(0x245F + i);
+    else return String(i);
+};
+
+// MAIN
+function roll() {
+    document.getElementById('wordLen').innerHTML = '';
+    rollOne(TIMES, function(f) {
+        var n = getNewNumber()
+        document.getElementById('mainNumber').innerHTML = String(n);
+        if (f) {
+            var s = words[n-1];
+            document.getElementById('wordLen').innerHTML =
+            "<span onclick='showAns(\"" + s + "\")'>World Length: " + _numeralId(s.length) +
+            "&nbsp;<span id='answer'></span></span>"
+        }
+    });
+}
+
+function showAns(s) {
+    document.getElementById('answer').innerHTML = s
+}
+
+if (isNaN(_getQin('rollMin')) || isNaN(_getQin('rollMax'))) {
+    document.getElementById('body').innerHTML ="<div class='mainNumber'>Not enough arguments!</div>";
+}
+
+</script>
+</body>
+</html>
