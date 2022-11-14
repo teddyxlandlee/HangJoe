@@ -16,22 +16,12 @@ const _getQi = function(e) {
     return isNaN(p) ? 0 : p;
 };
 
-const _randint = function(min,max) {
-    return Math.floor(Math.random() * (1 + max - min) + min);
-};
-
 function rollMin(){return _getQi('mi');}
 function rollMax(){return _getQi('ma');}
 
 function getNewNumber() {
     return _randint(rollMin(), rollMax());
 }
-
-const _err = function() {
-    document.getElementById('body').innerHTML =
-        '<div class="mainNumber">Not enough arguments!';
-    throw new Error('Not enough arguments!');
-};
 
 /*var _thr = false;
 //if (!queries.words) _thr = true;

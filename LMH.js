@@ -59,3 +59,13 @@ function rollOne(timesLeft, finalTask) {
         }
     }, SLEEP);
 }
+
+const _err = function() {
+    document.getElementById('body').innerHTML =
+        '<div class="mainNumber">Not enough arguments!';
+    throw new Error('Not enough arguments!');
+};
+
+const _randint = function(min,max) {
+    return Math.floor(Math.random() * (1 + max - min) + min);
+};
