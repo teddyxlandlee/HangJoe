@@ -16,6 +16,7 @@ _readFromUrl(queries.wl, function(c) {
 }, _err);
 
 function roll() {
+    //TODO RANDOM
     //document.getElementById('wordLen').innerHTML = '';
     rollOne(TIMES, function(f) {
         if (!f) {
